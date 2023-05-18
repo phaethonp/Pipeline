@@ -32,37 +32,37 @@ def extract_pdf(file_path):
     text = "".join(list_text)
     return text
 
-def create_index_from_text(text, index_type):
+def create_index_from_text(text, index_type, service_context):
     index_types = [GPTVectorStoreIndex, GPTListIndex, GPTKeywordTableIndex, GPTKnowledgeGraphIndex, GPTTreeIndex]
     methods = [create_vector_index_from_text, create_list_index_from_text, create_tree_index_from_text,
                create_kwtable_index_from_text, create_kg_index_from_text]
     n = index_types.index(index_type)
-    index = methods[n](text)
+    index = methods[n](text, service_context)
     return index
 
-def create_vector_index_from_text(text):
+def create_vector_index_from_text(text, service_context):
     documents = [Document(text)]
-    index = GPTVectorStoreIndex.from_documents(documents)
+    index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context)
     return index
 
-def create_list_index_from_text(text):
+def create_list_index_from_text(text, service_context):
     documents = [Document(text)]
-    index = GPTListIndex.from_documents(documents)
+    index = GPTListIndex.from_documents(documents, service_context=service_context)
     return index
 
-def create_tree_index_from_text(text):
+def create_tree_index_from_text(text, service_context):
     documents = [Document(text)]
-    index = GPTTreeIndex.from_documents(documents)
+    index = GPTTreeIndex.from_documents(documents, service_context=service_context)
     return index
 
-def create_kwtable_index_from_text(text):
+def create_kwtable_index_from_text(text, service_context):
     documents = [Document(text)]
-    index = GPTKeywordTableIndex.from_documents(documents)
+    index = GPTKeywordTableIndex.from_documents(documents, service_context=service_context)
     return index
 
-def create_kg_index_from_text(text):
+def create_kg_index_from_text(text, service_context):
     documents = [Document(text)]
-    index = GPTKnowledgeGraphIndex.from_documents(documents)
+    index = GPTKnowledgeGraphIndex.from_documents(documents, service_context=service_context)
     return index
 
 def get_pdf_file():
@@ -79,6 +79,16 @@ def choose_index_type():
     while n not in range(len(dirs)):
         n = int(input("Please choose the method you want to index: "))
     return index_types[n], dirs[n]
+
+def choose_model_name():
+    model_names = ["gpt-3.5-turbo", "gpt-4"]
+    for i, name in enumerate(model_names):
+        print(i, ": ", name)
+    n = -1
+    while n not in range(len(model_names)):
+        n = int(input("Please choose which model you want to use: "))
+    return model_names[n]
+
 
 def save_indexes(index, dir):
     parent_dir = os.getcwd()
@@ -110,7 +120,13 @@ def main():
     text = extract_pdf(pdf_file_path)
 
     index_type, dir = choose_index_type()
-    index = create_index_from_text(text, index_type)
+
+    # define LLM
+    model_name = choose_model_name()
+    llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name=model_name))
+    service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor)
+    
+    index = create_index_from_text(text, index_type, service_context)
 
     # save indexes 
     persist_dir = save_indexes(index, dir)
