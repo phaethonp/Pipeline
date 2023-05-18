@@ -8,7 +8,8 @@
 
 # import libraries
 from llama_index import Document, ServiceContext, LLMPredictor, StorageContext
-from llama_index import GPTVectorStoreIndex
+from llama_index import GPTVectorStoreIndex, GPTListIndex, GPTKeywordTableIndex, GPTTreeIndex
+from llama_index.indices.knowledge_graph.base import GPTKnowledgeGraphIndex
 from llama_index import load_index_from_storage
 from langchain import OpenAI
 import PyPDF2
@@ -31,14 +32,33 @@ def extract_pdf(file_path):
     return text
 
 
-def create_index_from_text(text):
+def create_vector_index_from_text(text):
     documents = [Document(text)]
     index = GPTVectorStoreIndex.from_documents(documents)
     return index
 
+def create_list_index_from_text(text):
+    documents = [Document(text)]
+    index = GPTListIndex.from_documents(documents)
+    return index
+
+def create_tree_index_from_text(text):
+    documents = [Document(text)]
+    index = GPTTreeIndex.from_documents(documents)
+    return index
+
+def create_kwtable_index_from_text(text):
+    documents = [Document(text)]
+    index = GPTKeywordTableIndex.from_documents(documents)
+    return index
+
+def create_kg_index_from_text(text):
+    documents = [Document(text)]
+    index = GPTKnowledgeGraphIndex.from_documents(documents)
+    return index
 
 def get_pdf_file():
-    save_path = os.path.join(os.getcwd(), "B2B_TA_Example_MSC_Retail_Agent_Agreement.pdf")
+    save_path = os.path.join(os.getcwd(), "test.pdf")
 
     return save_path
 
@@ -70,7 +90,7 @@ def main():
 
     pdf_file_path = get_pdf_file()
     text = extract_pdf(pdf_file_path)
-    index = create_index_from_text(text)
+    index = create_list_index_from_text(text)
 
     # save indexes 
     persist_dir = save_indexes(index)
