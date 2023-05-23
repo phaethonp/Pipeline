@@ -15,6 +15,8 @@ import PyPDF2
 # import gdown
 import os
 
+# TO DO
+# Allow user to connect with her own Key
 
 def require_chatgptkey():
     """ Make user input chatgpt key"""
