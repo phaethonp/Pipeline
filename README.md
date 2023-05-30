@@ -1,7 +1,7 @@
 # Pipeline
 
 ## Rationale
-by structuring the process as independent and modular functions, you can readily turn each function into a FastAPI endpoint or an AWS Lambda function, and deploy the whole set as a scalable, serverless API using AWS API Gateway.
+by structuring the process as independent and modular functions, we can turn each function into a FastAPI endpoint or an AWS Lambda function, and deploy the whole set as a scalable, serverless API using AWS API Gateway.
 
 We use the code we have implemented in this notebook: https://colab.research.google.com/drive/15Ra6OuNE9fcjI8eVg9OrqxE25-gAv2n2#scrollTo=ckWRI8e5n2TB
 
