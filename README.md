@@ -40,6 +40,7 @@ def main():
 This approach separates each step into its own function for better code readability and maintainability. It also allows for flexibility in where the corpus is loaded from and how the embeddings are saved.
 
 ## 2. Creating question + Index embeddings
+#### TO DO : clarify index type selection if it is included in this API
 
 The pseudocode:
 
